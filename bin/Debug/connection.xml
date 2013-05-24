@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<connectionString>
+  <!-- IP адрес или имя PostgresSQL сервера -->
+  <Server>192.168.132.128</Server>
+  <!-- Порт для соединения с сервером -->
+  <Port>5432</Port>
+  <!-- Настройки версии протокола -->
+  <Protocol>3</Protocol>
+  <!-- Имя базы данных -->
+  <Database>schedule</Database>
+  <!-- Имя пользователя -->
+  <User>postgres</User>
+  <!-- Windows Аутентификация -->
+  <IntegratedSecurity>False</IntegratedSecurity>
+  <!-- Пароль пользователя -->
+  <Password>postgres</Password>
+  <!-- Установить безопасное соединение -->
+  <Ssl>False</Ssl>
+  <!-- Использовать пул соединения -->
+  <Pooling>True</Pooling>
+  <!-- Минимальный размер пула соединения. Предварительно выделяет количество соединения с серваром -->
+  <MinPoolSize>1</MinPoolSize>
+  <!-- Максимальный размер пула соединения. Соединения будут удалятсья, если пул переполнен -->
+  <MaxPoolSize>20</MaxPoolSize>
+  <!-- Время ожидания для подключения -->
+  <Timeout>15</Timeout>
+  <!-- Время ожидания окончания команды до вызова исключения (секунды) -->
+  <CommandTimeout>20</CommandTimeout>
+  <!-- Тип ssl соединения: -->
+  <!--Prefer - по возможности будет использоваться подключение через SLL или SSL-->
+  <!--Require - выкидывать исключение, если SSL соединение н е может быть установлено-->
+  <!--Disable - отключить SSL-->
+  <Sslmode>Disable</Sslmode>
+  <!-- Время ожидания до закрытия неиспользуемых соединений в пуле (секунды) -->
+  <ConnectionLifeTime>15</ConnectionLifeTime>
+  <!-- Использовать синхронные уведомления -->
+  <SyncNotification>False</SyncNotification>
+  <!-- Поддержка транзакций. Экспериментальная функция, если есть проблемы поставить значение False -->
+  <Enlist>True</Enlist>
+</connectionString>

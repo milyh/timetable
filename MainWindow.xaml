@@ -1,0 +1,59 @@
+﻿<Window x:Class="timetable.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Title="Расписание / Таблица времени / Диплом / Д.С." Height="350" WindowStartupLocation="CenterScreen" Icon="image/icon.ico" SizeToContent="Width" Width="610">
+
+    <Grid Name="Layout">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.ColumnSpan="2" Grid.Row="0" Margin="0,0,0,10">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Добавить..." >
+                    <MenuItem Header="Рабочий план" Name="addWorkPlan" />
+                    <MenuItem Header="Правила (расписание преподователя)" Name="addRegulation" />
+                    <MenuItem Header="Преподователя" Name="addTeacher" />
+                    <MenuItem Header="Аудиторию" Name="addClassroom" />
+                    <MenuItem Header="Расписание звонков" Name="addLessonsSchedule" />
+                    <MenuItem Header="Группу" Name="addGroup" />
+                    <MenuItem Header="Предмет" Name="addSubject" />
+                    <MenuItem Header="Специальность" Name="addSpecialty" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Выход" Name="exitApp" />
+            </MenuItem>
+            
+            <MenuItem Header="Параметры">
+                <MenuItem Header="Настройки соединения с базой данных" Name="connectionSetting" />
+                <Separator />
+                <MenuItem Header="Печать" Name="printSetting" />
+            </MenuItem>
+            
+            <MenuItem Header="Справка">
+                <MenuItem Header="О программе" Name="aboutApp" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Кнопки меню -->
+        <StackPanel Grid.Column="0" Orientation="Vertical" Grid.Row="1">
+            <Button Name="TeacherButton" Content="Преподователи" Click="menuButtonClick" FontSize="16" 
+                    HorizontalContentAlignment="Left" Margin="0 0 0 0.5" Padding="10" />
+            <Button Name="ClassroomButton" Content="Аудитории" Click="menuButtonClick" FontSize="16" 
+                    HorizontalContentAlignment="Left" Margin="0 0 0 0.5" Padding="10" />
+            <Button Name="SubjectButton" Content="Предметы" Click="menuButtonClick" FontSize="16" 
+                    HorizontalContentAlignment="Left" Margin="0 0 0 0.5" Padding="10" />
+            <Button Name="SpecialtyButton" Content="Специальности" Click="menuButtonClick" FontSize="16" 
+                    HorizontalContentAlignment="Left" Padding="10" />
+        </StackPanel>
+
+        <!-- DataGrid (из кода) -->
+
+    </Grid>
+
+</Window>    
