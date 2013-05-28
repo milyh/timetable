@@ -1,7 +1,7 @@
 ﻿<Window x:Class="timetable.src.window.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AboutWindow" SizeToContent="WidthAndHeight" ResizeMode="NoResize" >
+        Title="О программе" SizeToContent="WidthAndHeight" ResizeMode="NoResize" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

@@ -75,8 +75,8 @@ namespace timetable
                 System.Diagnostics.Debug.WriteLine("Нет соединения, открыть настройки");
 
                 СonfigСonnectionWindow settingWindow = new СonfigСonnectionWindow();
-                settingWindow.ShowDialog();
                 settingWindow.ConnectionComplite += (obj, sndr) => initConnection();
+                settingWindow.ShowDialog();                
             }
             else
             {
@@ -100,9 +100,6 @@ namespace timetable
             // Передаём connection в EF
             context = new EntityContext(connection);
 
-            //System.Diagnostics.Debug.WriteLine("________ " + context.regulation.GetType() + " __________");
-            //System.Diagnostics.Debug.WriteLine("________ " + context.regulation.FirstOrDefault().GetType() + " __________");
-
             grid = new DataGridView();
             Layout.Children.Add(grid);
             Grid.SetRow(grid, 1);
@@ -115,32 +112,6 @@ namespace timetable
             //System.Reflection.MethodInfo change = grid.GetType().GetMethod("Change");
             //System.Reflection.MethodInfo genericChange = change.MakeGenericMethod(context.regulation.FirstOrDefault().GetType());
             //genericChange.Invoke(grid, new object[] { context.regulation });
-
-            //System.Diagnostics.Debug.WriteLine("+++++++++++++++ " + context.classroom.First().className + " +++++++++++++++");
-
-            // Прмиер LINQ
-            //LessonsSchedule reg = context.lessonsSchedule.Where(n => n.id == 5).FirstOrDefault();
-            //System.Diagnostics.Debug.WriteLine(DateTime.Parse(reg.beginTime) + " ____________________________");
-            
-            //LessonsSchedule f = new LessonsSchedule();
-            //f.beginTime = DateTime.Now.ToString("t");
-            //f.endTime = DateTime.Now.ToString("t");
-            // DateTime(2000, 1, 2, 17, 18, 19)
-            // 2000 - год, 1 - месяц, 2 - число,  17 - часов, 18 - минут, 19 - секунд
-            //context.lessonsSchedule.Add(f);
-            //context.SaveChanges();
-
-            //System.Diagnostics.Debug.WriteLine(reg.lessons);
-
-            //if (BitConverter.IsLittleEndian)
-            //    Array.Reverse(reg.lessons);
-
-            //int[] fr = Array.ConvertAll(reg.lessons, n => (int)n);
-
-            //foreach (var a in reg.lessons)
-            //{
-            //    System.Diagnostics.Debug.WriteLine(a.ToString());
-            //}
         }
 
         private void menuButtonClick(object sender, RoutedEventArgs e)
@@ -164,8 +135,6 @@ namespace timetable
                     grid.Change<Specialty>(context.specialty);
                     break;
             }
-
-            //System.Diagnostics.Debug.WriteLine((sender as Button).Name.Replace("Button", string.Empty));
         }
     }
 }

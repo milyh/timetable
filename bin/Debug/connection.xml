@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <connectionString>
   <!-- IP адрес или имя PostgresSQL сервера -->
-  <Server>192.168.132.128</Server>
+  <Server>192.168.132.</Server>
   <!-- Порт для соединения с сервером -->
   <Port>5432</Port>
   <!-- Настройки версии протокола -->
