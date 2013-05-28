@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 
 
 namespace timetable.src.entity.table
@@ -36,7 +32,13 @@ namespace timetable.src.entity.table
         [Column("laboratory_time"), DisplayName("Часы на лабораторные работы")]
         public int laboratoryTime { get; set; }     // Время отводимое для лабораторных занятий
 
-        [Column, Required, DisplayName("Комментарий")]
+        [Column("begin_date"), DisplayName("Дата начала семестра")]
+        public string beginDate { get; set; }       // Дата начала семестра
+
+        [Column("end_date"), DisplayName("Дата конца семестра")]
+        public string endDate { get; set; }         // Дата конца семестра
+
+        [Column, DisplayName("Комментарий")]
         public string description { get; set; }     // Комментарий
     }
 }

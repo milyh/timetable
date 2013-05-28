@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using timetable.src.entity;
 using timetable.src.entity.table;
 
@@ -51,7 +43,7 @@ namespace timetable.src.window.add
             newTeacher.middlename = middlenameTextBox.Text;
             newTeacher.initials = String.Format("{0}. {1}.", firstnameTextBox.Text[0], middlenameTextBox.Text[0]);
             newTeacher.phone = phoneTextBox.Text;
-            newTeacher.adress = adressTextBox.Text;
+            newTeacher.address = adressTextBox.Text;
             newTeacher.email = emailTextBox.Text;
             newTeacher.description = descriptionTextBox.Text;
 

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
 using timetable.src.entity;
-using timetable.src.entity.table;
 
 
 namespace timetable.control

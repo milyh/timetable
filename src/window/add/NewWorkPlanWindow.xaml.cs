@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using timetable.src.entity;
 using timetable.src.entity.table;
 
@@ -28,8 +20,17 @@ namespace timetable.src.window.add
 
             db = _db;
 
+            /*
+             * Первое полугодие 1 сентбря - 28 декабря
+             * Второе полугодие 14 января - 28 июня
+            */
+
+            // Утсановка даты начала и конца семестра
+            beginDate.SelectedDate = new DateTime(DateTime.Now.Year, 9, 1); 
+            endDate.SelectedDate = new DateTime(DateTime.Now.Year, 12, 28); 
+
             // Список  преподоватлей (ФИО)
-            teacherNameTextBox.ItemsSource = db.teacher
+            teacherNameComboBox.ItemsSource = db.teacher
                                                   .Select(item => item.lastname + " " + item.firstname + " " + item.middlename)
                                                   .ToList<string>();
             // Список предметов
@@ -37,19 +38,18 @@ namespace timetable.src.window.add
                                                   .Select(item => item.subjectName)
                                                   .ToList<string>();
 
-            teacherNameTextBox.SelectedIndex = subjectNameComboBox.SelectedIndex = 0;
-
+            teacherNameComboBox.SelectedIndex = subjectNameComboBox.SelectedIndex = 0;
         }
 
         // Нажатие кнопки "Добавить"
         private void addWorkPlan(object sender, RoutedEventArgs e)
         {
-            string[] fio = ((string)teacherNameTextBox.SelectedValue).Split();
+            string[] fio = ((string)teacherNameComboBox.SelectedValue).Split();
             string _firstname = fio[0];
             string _lastname = fio[1];
             string _middlename = fio[2];
 
-            // Создаём новую аудиторию
+            // Создаём новый рабочий план
             WorkPlan newWorkPlan = new WorkPlan();
 
             newWorkPlan.idTeacher = db.teacher
@@ -62,6 +62,8 @@ namespace timetable.src.window.add
                                             .Where(item => item.subjectName == (string)subjectNameComboBox.SelectedValue)
                                             .Select(item => item.id)
                                             .First();
+            newWorkPlan.beginDate = ((DateTime)beginDate.SelectedDate).ToString("D");
+            newWorkPlan.endDate = ((DateTime)endDate.SelectedDate).ToString("D");
             newWorkPlan.lecturesTime = (int)lecturesTime.Value;
             newWorkPlan.practiceTime = (int)practiceTime.Value;
             newWorkPlan.laboratoryTime = (int)laboratoryTime.Value;

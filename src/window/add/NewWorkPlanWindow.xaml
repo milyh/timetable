@@ -14,6 +14,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -22,38 +24,44 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" Content="Преподователь" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
-        <ComboBox Name="teacherNameTextBox" Grid.Column="1" Grid.Row="0" Width="150" IsEditable="True" VerticalAlignment="Center" />
+        <ComboBox Name="teacherNameComboBox" Grid.Column="1" Grid.Row="0" Width="150" IsEditable="True" VerticalAlignment="Center" />
 
         <Label Grid.Column="0" Grid.Row="1" Content="Предмет" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
         <ComboBox Name="subjectNameComboBox" Grid.Column="1" Grid.Row="1" Width="150" IsEditable="True" VerticalAlignment="Center" />
 
-        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <Label Grid.Column="0" Grid.Row="2" Content="Дата начала семестра" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
+        <DatePicker Name="beginDate" Grid.Column="1" Grid.Row="2" SelectedDateFormat="Long" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <Label Grid.Column="0" Grid.Row="3" Content="Дата конца семестра" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
+        <DatePicker Name="endDate" Grid.Column="1" Grid.Row="3" SelectedDateFormat="Long" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <TextBlock Text="Количество часов на лекции" MaxWidth="130" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap"  />
             <Label Content="(не обязательно)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
         </StackPanel>
-        <xctk:IntegerUpDown Name="lecturesTime" Grid.Column="1" Grid.Row="2" Value="0" Increment="1" Minimum="0" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
+        <xctk:IntegerUpDown Name="lecturesTime" Grid.Column="1" Grid.Row="4" Value="0" Increment="1" Minimum="0" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
 
-        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <TextBlock Text="Количество часов на практику" MaxWidth="130" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap"  />
             <Label Content="(не обязательно)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
         </StackPanel>
-        <xctk:IntegerUpDown Name="practiceTime" Grid.Column="1" Grid.Row="3" Value="0" Increment="1" Minimum="0" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
+        <xctk:IntegerUpDown Name="practiceTime" Grid.Column="1" Grid.Row="5" Value="0" Increment="1" Minimum="0" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
 
-        <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <StackPanel Grid.Column="0" Grid.Row="6" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <TextBlock Text="Количество часов на лабораторные" MaxWidth="130" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap"  />
             <Label Content="(не обязательно)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
         </StackPanel>
-        <xctk:IntegerUpDown Name="laboratoryTime" Grid.Column="1" Grid.Row="4" Value="0" Increment="1" Minimum="0" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
+        <xctk:IntegerUpDown Name="laboratoryTime" Grid.Column="1" Grid.Row="6" Value="0" Increment="1" Minimum="0" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
 
-        <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <StackPanel Grid.Column="0" Grid.Row="7" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <Label Content="Комментарий" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="5,5,5,2" FontSize="14" />
             <Label Content="(не обязательно)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
         </StackPanel>
-        <TextBox Name="descriptionTextBox"  Grid.Column="1" Grid.Row="5" Width="150" TextWrapping="Wrap" MinHeight="60" VerticalAlignment="Center" FontSize="14" />
+        <TextBox Name="descriptionTextBox"  Grid.Column="1" Grid.Row="7" Width="150" TextWrapping="Wrap" MinHeight="60" VerticalAlignment="Center" FontSize="14" />
 
-        <Button Name="addButton" Click="addWorkPlan" Grid.ColumnSpan="2" Grid.Row="6" Content="Добавить" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,0,0" Padding="3" />
+        <Button Name="addButton" Click="addWorkPlan" Grid.ColumnSpan="2" Grid.Row="8" Content="Добавить" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,0,0" Padding="3" />
 
-        <TextBox Name="errorTextBox" Grid.Column="3" Grid.RowSpan="7" FontSize="14" TextWrapping="Wrap" MaxWidth="250" Margin="10,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="2" BorderBrush="#FFFF002E" SelectionBrush="#FFFF002E" Visibility="Collapsed" IsReadOnly="True" />
+        <TextBox Name="errorTextBox" Grid.Column="3" Grid.RowSpan="9" FontSize="14" TextWrapping="Wrap" MaxWidth="250" Margin="10,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="2" BorderBrush="#FFFF002E" SelectionBrush="#FFFF002E" Visibility="Collapsed" IsReadOnly="True" />
 
     </Grid>
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 
 
 namespace timetable.src.entity.table
@@ -35,7 +31,7 @@ namespace timetable.src.entity.table
         public string phone { get; set; }           // Телефон преподователя
 
         [Column, DisplayName("Адрес")]
-        public string adress { get; set; }          // Адрес преподователя
+        public string address { get; set; }          // Адрес преподователя
 
         [Column, DisplayName("E-mail")]
         public string email { get; set; }           // E-mail преподователя

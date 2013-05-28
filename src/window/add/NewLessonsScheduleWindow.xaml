@@ -11,6 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -20,23 +21,26 @@
 
         <Label Grid.Column="0" Grid.Row="0" Content="Начало занятия" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
         <xctk:TimePicker Name="beginTimePicker" Grid.Column="1" Grid.Row="0" Width="80" 
-                         Format="ShortTime" Value="08:00"
+                         Format="ShortTime"
                          VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 
         <Label Grid.Column="0" Grid.Row="1" Content="Окончание занятия" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
         <xctk:TimePicker Name="endTimePicker" Grid.Column="1" Grid.Row="1" Width="80" 
-                          Format="ShortTime" Value="09:35"
+                          Format="ShortTime"
                          VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 
-        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <Label Grid.Column="0" Grid.Row="2" Content="Номер занятия" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
+        <ComboBox Grid.Column="1" Grid.Row="2" Width="80" Name="numberLesson" VerticalAlignment="Center" />
+        
+        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <Label Content="Комментарий" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="5,5,5,2" FontSize="14" />
             <Label Content="(не обязательно)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
         </StackPanel>
-        <TextBox Name="descriptionTextBox"  Grid.Column="1" Grid.Row="2" Width="150" TextWrapping="Wrap" MinHeight="60" VerticalAlignment="Center" FontSize="14" />
+        <TextBox Name="descriptionTextBox"  Grid.Column="1" Grid.Row="3" Width="150" TextWrapping="Wrap" MinHeight="60" VerticalAlignment="Center" FontSize="14" />
 
-        <Button Name="addButton" Click="addLessonsSchedule" Grid.ColumnSpan="2" Grid.Row="3" Content="Добавить" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,0,0" Padding="3" />
+        <Button Name="addButton" Click="addLessonsSchedule" Grid.ColumnSpan="2" Grid.Row="4" Content="Добавить" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,0,0" Padding="3" />
 
-        <TextBox Name="errorTextBox" Grid.Column="3" Grid.RowSpan="4" FontSize="14" TextWrapping="Wrap" MaxWidth="250" Margin="10,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="2" Visibility="Collapsed" BorderBrush="#FFFF002E" SelectionBrush="#FFFF002E" IsReadOnly="True" />
+        <TextBox Name="errorTextBox" Grid.Column="3" Grid.RowSpan="5" FontSize="14" TextWrapping="Wrap" MaxWidth="250" Margin="10,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="2" Visibility="Collapsed" BorderBrush="#FFFF002E" SelectionBrush="#FFFF002E" IsReadOnly="True" />
 
     </Grid>
     
