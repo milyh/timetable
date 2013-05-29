@@ -19,13 +19,13 @@ namespace timetable.src.entity.table
         [Column("id_teacher"), Required, DisplayName("Идентификатор преподователя")]
         public int idTeacher { get; set; }         // ID преподователя (внешний ключ)
 
-        [Required, DisplayName("Номер дня недели")]
+        [DisplayName("Номер дня недели")]
         public int day { get; set; }               // День недели (скрыт, вместо него возвращается день недели из перечисления)
 
-        [Column, Required, DisplayName("Свободные пары")]
-        public byte[] lessons { get; set; }        // В какое время преподователь может вести занятие
+        [Column, DisplayName("Свободные пары")]
+        public string lessons { get; set; }        // В какое время преподователь может вести занятие
         
-        [Required, Column("max_lesson"), DisplayName("Максимальное количество занятий")]
+        [Column("max_lesson"), DisplayName("Максимальное количество занятий")]
         public int maxLesson { get; set; }          // Максимальное количество занятий, которые может вести преподователь в день
 
         [Column, DisplayName("Комментарий")]

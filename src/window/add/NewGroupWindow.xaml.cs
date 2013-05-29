@@ -34,7 +34,7 @@ namespace timetable.src.window.add
         // Нажатие кнопки "Добавить"
         private void addNewGroup(object sender, RoutedEventArgs e)
         {
-            // Создаём новую аудиторию
+            // Создаём новую группу
             Group newGroup = new Group();
             newGroup.groupName = groupNameTextBox.Text;
             newGroup.idSpecialty = db.specialty
@@ -43,7 +43,7 @@ namespace timetable.src.window.add
                                             .First();
             newGroup.description = descriptionTextBox.Text;
 
-            // Добавляем созданную аудиторию
+            // Добавляем созданную группу
             db.group.Add(newGroup);
 
             try

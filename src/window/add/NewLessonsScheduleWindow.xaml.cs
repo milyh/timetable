@@ -13,7 +13,7 @@ namespace timetable.src.window.add
     public partial class NewLessonsScheduleWindow : Window
     {
         private EntityContext db;
-        private LessonsSchedule lastLesson;
+        private int lessonsCount;
 
         private readonly int lessonDuration = 95;
         private readonly int breakDuration = 10;
@@ -26,19 +26,17 @@ namespace timetable.src.window.add
 
             
             // Последняя пара в таблице
-            lastLesson = db.lessonsSchedule
-                                .Where(lesson => lesson.numberLesson == db.lessonsSchedule.Max(max => max.numberLesson))
-                                .FirstOrDefault();
+            lessonsCount = db.lessonsSchedule.Count();                                
 
             // Создание списка с номером занятия
             numberLesson.ItemsSource = Enumerable.Range(1, 10);
-            numberLesson.SelectedIndex = lastLesson.numberLesson;
+            numberLesson.SelectedIndex = lessonsCount;
 
             // Ставим начальные значения для начала и конца пары относительно номеры пары
             beginTimePicker.Value = new DateTime(2000, 1, 1, 8, 0, 0)
-                                            .AddMinutes(lessonDuration * lastLesson.numberLesson + (lastLesson.numberLesson + 1) * breakDuration);
+                                            .AddMinutes(lessonDuration * lessonsCount + (lessonsCount + 1) * breakDuration);
             endTimePicker.Value = new DateTime(2000, 1, 1, 9, 35, 0)
-                                            .AddMinutes(lessonDuration * lastLesson.numberLesson + (lastLesson.numberLesson + 1) * breakDuration);
+                                            .AddMinutes(lessonDuration * lessonsCount + (lessonsCount + 1) * breakDuration);
         }
 
         // Нажатие кнопки "Добавить"
@@ -66,7 +64,7 @@ namespace timetable.src.window.add
                 errorTextBox.Text = error.Message;                            // с текстом ошибки
                 errorTextBox.Focus();                                         // устанавливаем фокус на это поле
                 db.lessonsSchedule.Remove(newLessonsSchedule);                // Удаляем созданную аудитории из списка
-                numberLesson.SelectedIndex = lastLesson.numberLesson;
+                numberLesson.SelectedIndex = lessonsCount;
             }
             finally
             {

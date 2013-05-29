@@ -57,7 +57,7 @@ namespace timetable.src.window.add
                                                            item.firstname == _lastname &&
                                                            item.middlename == _middlename)
                                             .Select(item => item.id)
-                                            .First();
+                                            .Single();
             newWorkPlan.idSubject = db.subject
                                             .Where(item => item.subjectName == (string)subjectNameComboBox.SelectedValue)
                                             .Select(item => item.id)

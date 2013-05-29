@@ -4,10 +4,12 @@ using System.Windows;
 using System.Windows.Controls;
 using timetable.control;
 using timetable.src;
+using System.Linq;
 using timetable.src.entity;
 using timetable.src.entity.table;
 using timetable.src.window;
 using timetable.src.window.add;
+using System;
 
 namespace timetable
 {
@@ -44,7 +46,7 @@ namespace timetable
             addSubject.Click += (obj, sndr)         => new NewSubjectWindow(context).ShowDialog();   
             addSpecialty.Click += (obj, sndr)       => new NewSpecialtyWindow(context).ShowDialog();
             addWorkPlan.Click += (obj, sndr)        => new NewWorkPlanWindow(context).ShowDialog();
-            //addRegulation.Click += (obj, sndr) =>
+            addRegulation.Click += (obj, sndr)      => new NewRegulationWindow(context).ShowDialog();
 
             printSetting.Click += (obj, sndr) => {
                                                      PrintDialog printDlg = new PrintDialog();
@@ -99,6 +101,47 @@ namespace timetable
             //System.Reflection.MethodInfo change = grid.GetType().GetMethod("Change");
             //System.Reflection.MethodInfo genericChange = change.MakeGenericMethod(context.regulation.FirstOrDefault().GetType());
             //genericChange.Invoke(grid, new object[] { context.regulation });
+
+            int[] teachers = context.regulation.Select(id => id.idTeacher).Distinct().ToArray();
+
+            foreach (int teacherID in teachers)
+            {
+                // Текущий преподователь
+                Teacher currentTeacher = context.teacher
+                                                   .Where(id => id.id == teacherID)
+                                                   .Single();
+
+                // Рабочий план текущего преподователя
+                WorkPlan[] workPlan = context.workPlan
+                                                   .Where(id => id.idTeacher == teacherID)
+                                                   .ToArray();
+
+                // Необходимое число лекций
+                int lessonCount;
+
+                
+                if (workPlan.Length > 0)
+                {                    
+                    // Количество дней в семестре
+                    TimeSpan daysOfSemester = DateTime.Parse(workPlan[0].endDate) - DateTime.Parse(workPlan[0].beginDate);
+
+                    //Количество недель в семестре
+                    int weeksCount = daysOfSemester.Days / 7;
+
+                    // Количество часов в неделю у данного преподователя на данный предмет
+                      // Если количество часов на практику меньше количество недель в семестре
+                      // То это пара будет идти раз в 2 недели
+                    if (workPlan[0].lecturesTime < weeksCount)
+                    {
+                        lessonCount = workPlan[0].lecturesTime / (weeksCount / 2);
+                    }
+                      // Иначе лекция будет каждую неделю
+                    else
+                    {
+                        lessonCount = workPlan[0].lecturesTime / weeksCount;
+                    }
+                }
+            }
         }
 
         private void menuButtonClick(object sender, RoutedEventArgs e)
