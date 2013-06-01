@@ -9,6 +9,7 @@ using timetable.src.entity;
 using timetable.src.entity.table;
 using timetable.src.window;
 using timetable.src.window.add;
+using System.Data.Entity;
 using System;
 
 namespace timetable
@@ -34,25 +35,26 @@ namespace timetable
             InitializeComponent();
 
             // События контекстного меню
-            connectionSetting.Click += (obj, sndr)  => new СonfigСonnectionWindow().ShowDialog();
+            connectionSetting.Click += (obj, sndr) => new СonfigСonnectionWindow().ShowDialog();
 
-            exitApp.Click += (obj, sndr)            => App.Current.Shutdown();
-            aboutApp.Click += (obj, sndr)           => new AboutWindow().Show();
+            exitApp.Click += (obj, sndr) => App.Current.Shutdown();
+            aboutApp.Click += (obj, sndr) => new AboutWindow().Show();
 
-            addTeacher.Click += (obj, sndr)         => new NewTeacherWindow(context).ShowDialog();
-            addClassroom.Click += (obj, sndr)       => new NewClassroomWindow(context).ShowDialog();
-            addGroup.Click += (obj, sndr)           => new NewGroupWindow(context).ShowDialog();
+            addTeacher.Click += (obj, sndr) => new NewTeacherWindow(context).ShowDialog();
+            addClassroom.Click += (obj, sndr) => new NewClassroomWindow(context).ShowDialog();
+            addGroup.Click += (obj, sndr) => new NewGroupWindow(context).ShowDialog();
             addLessonsSchedule.Click += (obj, sndr) => new NewLessonsScheduleWindow(context).ShowDialog();
-            addSubject.Click += (obj, sndr)         => new NewSubjectWindow(context).ShowDialog();   
-            addSpecialty.Click += (obj, sndr)       => new NewSpecialtyWindow(context).ShowDialog();
-            addWorkPlan.Click += (obj, sndr)        => new NewWorkPlanWindow(context).ShowDialog();
-            addRegulation.Click += (obj, sndr)      => new NewRegulationWindow(context).ShowDialog();
+            addSubject.Click += (obj, sndr) => new NewSubjectWindow(context).ShowDialog();
+            addSpecialty.Click += (obj, sndr) => new NewSpecialtyWindow(context).ShowDialog();
+            addWorkPlan.Click += (obj, sndr) => new NewWorkPlanWindow(context).ShowDialog();
+            addRegulation.Click += (obj, sndr) => new NewRegulationWindow(context).ShowDialog();
 
-            printSetting.Click += (obj, sndr) => {
-                                                     PrintDialog printDlg = new PrintDialog();
-                                                     printDlg.ShowDialog();
-                                                     printDlg.PrintVisual(grid, "Печать...");
-                                                 };
+            printSetting.Click += (obj, sndr) =>
+            {
+                PrintDialog printDlg = new PrintDialog();
+                printDlg.ShowDialog();
+                printDlg.PrintVisual(grid, "Печать...");
+            };
 
             // Если файла xml нет, создать новый файл (настройки соединения с сервером)
             if (!File.Exists(App.xmlFileName))
@@ -65,7 +67,7 @@ namespace timetable
 
                 СonfigСonnectionWindow settingWindow = new СonfigСonnectionWindow();
                 settingWindow.ConnectionComplite += (obj, sndr) => initConnection();
-                settingWindow.ShowDialog();                
+                settingWindow.ShowDialog();
             }
             else
             {
@@ -102,43 +104,120 @@ namespace timetable
             //System.Reflection.MethodInfo genericChange = change.MakeGenericMethod(context.regulation.FirstOrDefault().GetType());
             //genericChange.Invoke(grid, new object[] { context.regulation });
 
+
+
+
+            //// Загружаем данные из бд для локльного использования без изменений в базе
+            //context.teacher.Load();
+            //context.regulation.Load();
+            //context.workPlan.Load();
+
+            // Список всех преподователей из  таблицы правил
             int[] teachers = context.regulation.Select(id => id.idTeacher).Distinct().ToArray();
+
+            //Количество недель в семестре
+            int weeksCount;
+
+            int lectures;     // Количество часов на лекции
+            int practices;    // Количество часов на практику
+            int laboratorys;  // КОличествво часов на лабораторные
+            int maxLessons;   // Максимальное число пар за день
+
 
             foreach (int teacherID in teachers)
             {
+                ///////////////////\\\\\\\\\\\\\\\\\\\\
+                System.Diagnostics.Debug.WriteLine("------------------------------------------------------------------>");
+                ///////////////////\\\\\\\\\\\\\\\\\\\\
+
                 // Текущий преподователь
                 Teacher currentTeacher = context.teacher
                                                    .Where(id => id.id == teacherID)
                                                    .Single();
 
+                ///////////////////\\\\\\\\\\\\\\\\\\\\
+                System.Diagnostics.Debug.WriteLine("Преподователь:  ID = {0},  Фамилия = {1}", currentTeacher.id, currentTeacher.lastname);
+                ///////////////////\\\\\\\\\\\\\\\\\\\\
+                
                 // Рабочий план текущего преподователя
                 WorkPlan[] workPlan = context.workPlan
                                                    .Where(id => id.idTeacher == teacherID)
                                                    .ToArray();
 
-                // Необходимое число лекций
-                int lessonCount;
-
-                
-                if (workPlan.Length > 0)
-                {                    
+                foreach (WorkPlan plan in workPlan)
+                {
                     // Количество дней в семестре
-                    TimeSpan daysOfSemester = DateTime.Parse(workPlan[0].endDate) - DateTime.Parse(workPlan[0].beginDate);
+                    TimeSpan daysOfSemester = DateTime.Parse(plan.endDate) - DateTime.Parse(plan.beginDate);
 
                     //Количество недель в семестре
-                    int weeksCount = daysOfSemester.Days / 7;
+                    weeksCount = daysOfSemester.Days / 7;
 
-                    // Количество часов в неделю у данного преподователя на данный предмет
-                      // Если количество часов на практику меньше количество недель в семестре
-                      // То это пара будет идти раз в 2 недели
-                    if (workPlan[0].lecturesTime < weeksCount)
+                    // Количество часов на лекции в неделю у данного преподователя на данный предмет                      
+                    lectures = plan.lecturesTime / weeksCount;
+
+                    // Количество часов на практику в неделю у данного преподователя на данный предмет                      
+                    practices = plan.practiceTime / weeksCount;
+
+                    // Количество часов на лабораторные в неделю у данного преподователя на данный предмет                      
+                    laboratorys = plan.laboratoryTime / weeksCount;
+
+
+                    ///////////////////\\\\\\\\\\\\\\\\\\\\
+                    System.Diagnostics.Debug.WriteLine("Рабочий план:  ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}   НА СЕМЕСТР", plan.id, plan.lecturesTime, plan.practiceTime, plan.laboratoryTime);
+                    ///////////////////\\\\\\\\\\\\\\\\\\\\
+                    System.Diagnostics.Debug.WriteLine("Количество недель в семестре {0}", weeksCount);
+                    System.Diagnostics.Debug.WriteLine("Рабочий план:  ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}   НА НЕДЕЛЮ", plan.id, lectures, practices, laboratorys);
+                    ///////////////////\\\\\\\\\\\\\\\\\\\\
+
+
+                    // Все правила текущего преподователя из рабочего плана, отсортированных по дням недели
+                    Regulation[] teacherFromReg = context.regulation
+                                                                .Where(id => id.idTeacher == teacherID)
+                                                                .OrderBy(d => d.day)
+                                                                .ToArray();
+
+                    foreach (Regulation reg in teacherFromReg)
                     {
-                        lessonCount = workPlan[0].lecturesTime / (weeksCount / 2);
-                    }
-                      // Иначе лекция будет каждую неделю
-                    else
-                    {
-                        lessonCount = workPlan[0].lecturesTime / weeksCount;
+                        maxLessons = reg.maxLesson;
+
+                        ///////////////////\\\\\\\\\\\\\\\\\\\\
+                        System.Diagnostics.Debug.WriteLine("");
+                        System.Diagnostics.Debug.WriteLine("Правило:  ID = {0},  День недели = {1},  Занятия = {2},  Макс. занятий = {3}", reg.id, reg.day, reg.lessons, reg.maxLesson);
+                        ///////////////////\\\\\\\\\\\\\\\\\\\\
+
+                        int[] lessons = reg.lessons.Split(',')
+                                                   .Select(lesson => int.Parse(lesson))
+                                                   .ToArray();
+
+                        foreach (int lesson in lessons)
+                        {
+
+                            // Условие выхода из цикла
+                            if (maxLessons == 0)
+                            {
+                                // Выход из цикла
+                                break;
+                            }
+                            else
+                            {
+                                maxLessons--;
+                            }                            
+
+                            // Уменьшаем количество часов на занятия
+                            if (lectures > 1) lectures --;
+                            else if (practices > 1) practices --;
+                            else if (laboratorys > 1) laboratorys --;
+                            else break;                            
+                        }
+
+                        ///////////////////\\\\\\\\\\\\\\\\\\\\
+                        System.Diagnostics.Debug.WriteLine("Расписание: ID предмета = {0},  День недели = {1},  Занятия = {2},  Осталось свободных занятий = {3}",
+                                                            plan.idSubject, reg.day, 0, maxLessons);
+                        ///////////////////\\\\\\\\\\\\\\\\\\\\
+                        System.Diagnostics.Debug.WriteLine("Остаток:  Лекций: = {0},  Практических =  {1},  Лабораторных = {2}", lectures, practices, laboratorys);
+                        ///////////////////\\\\\\\\\\\\\\\\\\\\
+
+                        
                     }
                 }
             }

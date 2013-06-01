@@ -31,7 +31,7 @@
 
 
         <TextBlock Grid.Column="0" Grid.Row="3" Text="Максимальное количество занятий" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14" MaxWidth="130" TextWrapping="Wrap"   />
-        <ComboBox Name="maxLessonsComboBox" Grid.Column="1" Grid.Row="3" Width="150" IsEditable="True" VerticalAlignment="Center" />
+        <ComboBox Name="maxLessonsComboBox" Grid.Column="1" Grid.Row="3" Width="150" IsEditable="True" VerticalAlignment="Center" IsEnabled="False" />
 
         <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Vertical" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <Label Content="Комментарий" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="5,5,5,2" FontSize="14" />

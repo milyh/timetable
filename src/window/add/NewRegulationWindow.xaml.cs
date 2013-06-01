@@ -5,6 +5,7 @@ using System.Windows.Input;
 using timetable.src.entity;
 using timetable.src.entity.table;
 
+
 namespace timetable.src.window.add
 {
     /// <summary>
@@ -26,12 +27,8 @@ namespace timetable.src.window.add
             // Список  преподоватлей (ФИО)
             teacherNameComboBox.ItemsSource = db.teacher
                                                   .Select(item => item.lastname + " " + item.firstname + " " + item.middlename)
-                                                  .ToList<string>();
-
-            // Максимальное количество занятий
-            maxLessonsComboBox.ItemsSource = Enumerable.Range(1, lessonsCount);
-
-            maxLessonsComboBox.SelectedIndex = teacherNameComboBox.SelectedIndex = 0;
+                                                  .ToList<string>();            
+            teacherNameComboBox.SelectedIndex = 0;
 
             // Заполнение номеров пар
             lessonsLayout.ItemsSource = Enumerable.Range(1, lessonsCount)
@@ -73,7 +70,7 @@ namespace timetable.src.window.add
             db.regulation.Add(newRegulation);
 
             try
-            {
+            {                
                 db.SaveChanges();   // Пытаемся сохранить изменения
                 this.Close();       // Закрываем окно, в случае успеха
             }
@@ -101,13 +98,21 @@ namespace timetable.src.window.add
         // Нажатие на номера занятий
         private void lessonsChanged(object sender, Xceed.Wpf.Toolkit.Primitives.ItemSelectionChangedEventArgs e)
         {
+            maxLessonsComboBox.ItemsSource = null;
+
             if (lessonsLayout.SelectedItems.Count > 0)
             {
                 addButton.Visibility = Visibility.Visible;
+
+                maxLessonsComboBox.IsEnabled = true;
+                maxLessonsComboBox.ItemsSource = Enumerable.Range(1, lessonsLayout.SelectedItems.Count);
+                maxLessonsComboBox.SelectedIndex = lessonsLayout.SelectedItems.Count - 1;
             }
             else
             {
                 addButton.Visibility = Visibility.Collapsed;
+
+                maxLessonsComboBox.IsEnabled = false;                
             }
         }
 
@@ -145,7 +150,8 @@ namespace timetable.src.window.add
                 dayOfWeekComboBox.Items.RemoveAt(i);
             }
 
-            dayOfWeekComboBox.SelectedIndex = 0;
+            if (dayOfWeekComboBox.Items.Count == 0) this.IsEnabled = false;
+            else dayOfWeekComboBox.SelectedIndex = 0;
         }
     }
 }

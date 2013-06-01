@@ -69,7 +69,7 @@ namespace timetable.src.window.add
             newWorkPlan.laboratoryTime = (int)laboratoryTime.Value;
             newWorkPlan.description = descriptionTextBox.Text;
 
-            // Добавляем созданную аудиторию
+            // Добавляем созданный план
             db.workPlan.Add(newWorkPlan);
 
             try
@@ -82,11 +82,11 @@ namespace timetable.src.window.add
                 errorTextBox.Visibility = System.Windows.Visibility.Visible;  // Показываем текстовое поле
                 errorTextBox.Text = error.Message;                            // с текстом ошибки
                 errorTextBox.Focus();                                         // устанавливаем фокус на это поле
-                db.workPlan.Remove(newWorkPlan);                // Удаляем созданную аудитории из списка
+                db.workPlan.Remove(newWorkPlan);                // Удаляем созданный рабочий план из списка
             }
             finally
             {
-                newWorkPlan = null;                        // Удаляем аудиторию
+                newWorkPlan = null;                             // Удаляем рабочий план
             }
 
         }
