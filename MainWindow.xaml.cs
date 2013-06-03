@@ -11,6 +11,7 @@ using timetable.src.window;
 using timetable.src.window.add;
 using System.Data.Entity;
 using System;
+using System.Collections.Generic;
 
 namespace timetable
 {
@@ -162,11 +163,10 @@ namespace timetable
                     laboratorys = plan.laboratoryTime / weeksCount;
 
 
-                    ///////////////////\\\\\\\\\\\\\\\\\\\\
-                    System.Diagnostics.Debug.WriteLine("Рабочий план:  ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}   НА СЕМЕСТР", plan.id, plan.lecturesTime, plan.practiceTime, plan.laboratoryTime);
-                    ///////////////////\\\\\\\\\\\\\\\\\\\\
+                    ///////////////////\\\\\\\\\\\\\\\\\\\\                    
                     System.Diagnostics.Debug.WriteLine("Количество недель в семестре {0}", weeksCount);
-                    System.Diagnostics.Debug.WriteLine("Рабочий план:  ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}   НА НЕДЕЛЮ", plan.id, lectures, practices, laboratorys);
+                    System.Diagnostics.Debug.WriteLine("Рабочий план НА СЕМЕСТР:  ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}", plan.id, plan.lecturesTime, plan.practiceTime, plan.laboratoryTime);
+                    System.Diagnostics.Debug.WriteLine("Рабочий план НА НЕДЕЛЮ:   ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}", plan.id, lectures, practices, laboratorys);
                     ///////////////////\\\\\\\\\\\\\\\\\\\\
 
 
@@ -189,32 +189,39 @@ namespace timetable
                                                    .Select(lesson => int.Parse(lesson))
                                                    .ToArray();
 
+                        List<int> taskLessons = new List<int>();
+
                         foreach (int lesson in lessons)
                         {
 
                             // Условие выхода из цикла
                             if (maxLessons == 0)
                             {
-                                // Выход из цикла
                                 break;
-                            }
-                            else
-                            {
-                                maxLessons--;
-                            }                            
+                            }                                                     
 
                             // Уменьшаем количество часов на занятия
-                            if (lectures > 1) lectures --;
-                            else if (practices > 1) practices --;
-                            else if (laboratorys > 1) laboratorys --;
-                            else break;                            
+                            if (lectures > 0) lectures --;
+                            else if (practices > 0) practices --;
+                            else if (laboratorys > 0) laboratorys --;
+                            else break;
+
+                            maxLessons--;
+
+                            taskLessons.Add(lesson);
                         }
 
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
-                        System.Diagnostics.Debug.WriteLine("Расписание: ID предмета = {0},  День недели = {1},  Занятия = {2},  Осталось свободных занятий = {3}",
-                                                            plan.idSubject, reg.day, 0, maxLessons);
+                        System.Diagnostics.Debug.WriteLine("Остаток НА НЕДЕЛЮ:  Лекций: = {0},  Практических =  {1},  Лабораторных = {2}", lectures, practices, laboratorys);                        
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
-                        System.Diagnostics.Debug.WriteLine("Остаток:  Лекций: = {0},  Практических =  {1},  Лабораторных = {2}", lectures, practices, laboratorys);
+                        System.Diagnostics.Debug.WriteLine("Расписание: ID предмета = {0},  День недели = {1},  Занятия = {2},  Осталось свободных занятий = {3}",
+                                                            plan.idSubject,
+                                                            reg.day,
+                                                            String.Join(",", taskLessons
+                                                                              .Select(x => x)
+                                                                              .OrderBy(x => x)
+                                                                              .ToArray()), 
+                                                            maxLessons);                        
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
 
                         
