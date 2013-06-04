@@ -16,7 +16,7 @@ namespace timetable.src.entity.table
         public int id { get; set; }                // ID правила (первичный ключ)
 
         //[ ForeignKey("teacher")]
-        [Column("id_teacher"), Required, DisplayName("Идентификатор преподователя")]
+        [Column("id_teacher"), DisplayName("Идентификатор преподователя")]
         public int idTeacher { get; set; }         // ID преподователя (внешний ключ)
 
         [DisplayName("Номер дня недели")]

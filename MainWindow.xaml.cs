@@ -112,62 +112,38 @@ namespace timetable
 
 
 
-            //Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
-            //if (excel == null)
-            //{
-            //    MessageBox.Show("EXCEL не может быть запущен. Убедитесь, что у вас установлен пакет MS Office.", "Excel Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    return;
-            //}
-            ////excel.Visible = true;
-            //Excel.Workbook wb = excel.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-            //Excel.Worksheet ws = (Excel.Worksheet)wb.Worksheets[1];
-            //ws.Name = "Расписание";
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            if (excel == null)
+            {
+                MessageBox.Show("EXCEL не может быть запущен. Убедитесь, что у вас установлен пакет MS Office.", "Excel Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            //excel.Visible = true;
+            Excel.Workbook wb = excel.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+            Excel.Worksheet ws = (Excel.Worksheet)wb.Worksheets[1];
+            ws.Name = "Расписание";            
 
-            //SaveFileDialog saveExcelFile = new SaveFileDialog();
-            //saveExcelFile.FileName = "Расписание";
-            //saveExcelFile.DefaultExt = ".xlsx";
-            //saveExcelFile.Filter = "Книга excel (*.xlsx, *.xls)|*.xlsx;*.xls";
+            LessonsSchedule[] rings = context.lessonsSchedule
+                                        .OrderBy(lesson => lesson.numberLesson)
+                                        .ToArray();
+            int column = 2;
 
-            //ws.Cells[1, 3] = "понедельник";
-            //ws.Cells[1, 4] = "вторник";
-            //ws.Cells[1, 5] = "среда";
-            //ws.Cells[1, 6] = "четверг";
-            //ws.Cells[1, 7] = "пятница";
-            //ws.Cells[1, 8] = "суббота";
+            for (int row = 2; row < (App.days.Length) * rings.Length; )
+            {
+                foreach (LessonsSchedule ring in rings)
+                {
+                    ws.Cells[column, 2] = ring.numberLesson + " пара" + "\n" + ring.beginTime + " - " + ring.endTime;
+                    column++;
+                }
 
-            //LessonsSchedule[] rings = context.lessonsSchedule
-            //                            .OrderBy(lesson => lesson.numberLesson)
-            //                            .ToArray();
-            //int column = 2;
+                excel.get_Range(String.Format("A{0}:A{1}", row, column - 1), Type.Missing).Merge(Type.Missing);
+                ws.Cells[row, 1] = App.days[(row - 2) / rings.Length];
 
-            //for (int row = 2; row < (App.days.Length) * rings.Length;)
-            //{
-
-                
-            //    foreach (LessonsSchedule ring in rings)
-            //    {
-            //        ws.Cells[column, 2] = ring.numberLesson + " пара" + "\n" + ring.beginTime + " - " + ring.endTime;
-            //        column++;
-            //    }
-
-            //    excel.get_Range(String.Format("A{0}:A{1}", row, column-1), Type.Missing).Merge(Type.Missing);
-            //    ws.Cells[row, 1] = App.days[(row - 2) / rings.Length];
-
-            //    row += rings.Length;
-            //}
+                row += rings.Length;
+            }
 
 
-            //// Сохранение файла и закрытие excel
-            //if ((bool)saveExcelFile.ShowDialog())
-            //{
-            //    wb.SaveAs(saveExcelFile.FileName);
-            //    wb.Close(true);
-            //}
-
-
-
-
-
+            
             // Список всех преподователей из  таблицы правил
             int[] teachers = context.regulation.Select(id => id.idTeacher).Distinct().ToArray();
 
@@ -178,6 +154,7 @@ namespace timetable
             int practices;    // Количество часов на практику
             int laboratorys;  // КОличествво часов на лабораторные
             int maxLessons;   // Максимальное число пар за день
+            int currentTeacherNumber = 2;   // Номер преподователя, нужен для заполнения excel
 
 
             foreach (int teacherID in teachers)
@@ -185,6 +162,8 @@ namespace timetable
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
                 System.Diagnostics.Debug.WriteLine("------------------------------------------------------------------>");
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
+
+                currentTeacherNumber++;
 
                 // Текущий преподователь
                 Teacher currentTeacher = context.teacher
@@ -194,6 +173,7 @@ namespace timetable
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
                 System.Diagnostics.Debug.WriteLine("Преподователь:  ID = {0},  Фамилия = {1}", currentTeacher.id, currentTeacher.lastname);
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
+                ws.Cells[1, currentTeacherNumber] = currentTeacher.lastname;
 
                 // Рабочий план текущего преподователя
                 WorkPlan[] workPlan = context.workPlan
@@ -216,7 +196,6 @@ namespace timetable
 
                     // Количество часов на лабораторные в неделю у данного преподователя на данный предмет                      
                     laboratorys = plan.laboratoryTime / weeksCount;
-
 
                     ///////////////////\\\\\\\\\\\\\\\\\\\\                    
                     System.Diagnostics.Debug.WriteLine("Количество недель в семестре {0}", weeksCount);
@@ -264,6 +243,26 @@ namespace timetable
                             maxLessons--;
 
                             taskLessons.Add(lesson);
+
+                            
+                            // Возвращаем название предмета и его id
+                            var subject = context.workPlan
+                                         .Where(currentPlan => currentPlan.id == plan.id)
+                                         .Join(
+                                             context.subject,
+                                             currentPlan => currentPlan.idSubject,
+                                             sub => sub.id,
+                                             (currentPlan, sub) => new { sub.subjectName, sub.id }
+                                         )
+                                         .Single();
+
+                            // По id предмета возвращаем все аудитории, в которых он преподаётся
+                            string classes = String.Join(", ", from sc in context.subjectClasses
+                                                               join cl in context.classroom on new { K1 = sc.idSubject, K2 = sc.idClassroom }
+                                                                                         equals new { K1 = subject.id, K2 = cl.id }
+                                                               select cl.className);
+
+                            ws.Cells[reg.day * rings.Length + 2, currentTeacherNumber] = subject.subjectName + "\n" + classes;
                         }
 
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
@@ -277,13 +276,28 @@ namespace timetable
                                                                               .OrderBy(x => x)
                                                                               .ToArray()),
                                                             maxLessons);
-                        ///////////////////\\\\\\\\\\\\\\\\\\\\
-
+                        ///////////////////\\\\\\\\\\\\\\\\\\\\                        
 
                     }
                 }
             }
+        /// ------- Цикл по составлению рассписания кончился ------------
+            
+            SaveFileDialog saveExcelFile = new SaveFileDialog();
+            saveExcelFile.FileName = "Расписание";
+            saveExcelFile.DefaultExt = ".xlsx";
+            saveExcelFile.Filter = "Книга excel (*.xlsx, *.xls)|*.xlsx;*.xls";
+
+            // Сохранение файла и закрытие excel
+            if ((bool)saveExcelFile.ShowDialog())
+            {
+                wb.SaveAs(saveExcelFile.FileName);
+                wb.Close(true);
+            }
+
+
         }
+
 
         private void menuButtonClick(object sender, RoutedEventArgs e)
         {
@@ -307,5 +321,6 @@ namespace timetable
                     break;
             }
         }
+
     }
 }

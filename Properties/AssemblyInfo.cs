@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("timetable")]
 [assembly: AssemblyDescription("Dima Milyh")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ВХУиТ")]
+[assembly: AssemblyCompany("ВГУИТ")]
 [assembly: AssemblyProduct("timetable")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("f1 help")]

@@ -15,7 +15,7 @@ namespace timetable.src.entity.table
         [Key]
         public int id { get; set; }                 // ID аудитории (первичный ключ)
 
-        [Column("class_name"), Required, DisplayName("Название класса")]
+        [Column("class_name"), DisplayName("Название класса")]
         public string className { get; set; }       // Название аудитории
 
         [Column, DisplayName("Комментарий")]

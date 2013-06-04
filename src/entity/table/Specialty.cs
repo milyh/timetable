@@ -15,7 +15,7 @@ namespace timetable.src.entity.table
         [Key]
         public int id { get; set; }                 // ID специальности / факультета (первичный ключ)
 
-        [Column("specialty_name"), Required, DisplayName("Название специальности")]
+        [Column("specialty_name"), DisplayName("Название специальности")]
         public string specialtyName { get; set; }   // Название специаьлности
 
         [Column, DisplayName("Комментарий")]

@@ -15,19 +15,19 @@ namespace timetable.src.entity.table
         [Key]
         public int id { get; set; }                 // ID преподователя (первичный ключ)
 
-        [Column, Required, DisplayName("Имя")]
+        [Column, DisplayName("Имя")]
         public string firstname { get; set; }       // Имя преподователя
 
-        [Column, Required, DisplayName("Фамилия")]
+        [Column, DisplayName("Фамилия")]
         public string lastname { get; set; }        // Фамилия преподователя
 
-        [Column, Required, DisplayName("Отчество")]
+        [Column, DisplayName("Отчество")]
         public string middlename { get; set; }      // Отчество преподователя
 
-        [Column, Required, DisplayName("Инициалы")]
+        [Column, DisplayName("Инициалы")]
         public string initials { get; set; }        // Инициалы преподователя 
 
-        [Column, Required, DisplayName("Телефон")]
+        [Column, DisplayName("Телефон")]
         public string phone { get; set; }           // Телефон преподователя
 
         [Column, DisplayName("Адрес")]

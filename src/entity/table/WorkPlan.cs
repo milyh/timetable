@@ -15,11 +15,11 @@ namespace timetable.src.entity.table
         [Key]
         public int id { get; set; }                 // ID рабочего плана (первичный ключ)
 
-        [Column("id_teacher"), Required, DisplayName("Идентификатор преподователя")]
+        [Column("id_teacher"), DisplayName("Идентификатор преподователя")]
         public int idTeacher { get; set; }          // ID преподователя (внешний ключь)
         //[ForeignKey("idTeacher")]
 
-        [Column("id_subject"), Required, DisplayName("Идентификатор предмета")]
+        [Column("id_subject"), DisplayName("Идентификатор предмета")]
         public int idSubject { get; set; }          // ID предмета (внешний ключ)
         //[ForeignKey("idSubject")]
 

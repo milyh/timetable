@@ -15,7 +15,7 @@ namespace timetable.src.entity.table
         [Key]
         public int id { get; set; }                 // ID предмета (первичный ключ)
 
-        [Column("subject_name"), Required, DisplayName("Название предмета")]
+        [Column("subject_name"), DisplayName("Название предмета")]
         public string subjectName { get; set; }     // Название предмета
 
         [Column, DisplayName("Комментарий")]

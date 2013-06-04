@@ -8,7 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/microsoft.office.interop.excel.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/mono.security.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/npgsql.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/office.dll")]
 
 
