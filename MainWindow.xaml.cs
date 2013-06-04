@@ -12,6 +12,8 @@ using timetable.src.window.add;
 using System.Data.Entity;
 using System;
 using System.Collections.Generic;
+using Excel = Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
 
 namespace timetable
 {
@@ -108,10 +110,63 @@ namespace timetable
 
 
 
-            //// Загружаем данные из бд для локльного использования без изменений в базе
-            //context.teacher.Load();
-            //context.regulation.Load();
-            //context.workPlan.Load();
+
+
+            //Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            //if (excel == null)
+            //{
+            //    MessageBox.Show("EXCEL не может быть запущен. Убедитесь, что у вас установлен пакет MS Office.", "Excel Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return;
+            //}
+            ////excel.Visible = true;
+            //Excel.Workbook wb = excel.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+            //Excel.Worksheet ws = (Excel.Worksheet)wb.Worksheets[1];
+            //ws.Name = "Расписание";
+
+            //SaveFileDialog saveExcelFile = new SaveFileDialog();
+            //saveExcelFile.FileName = "Расписание";
+            //saveExcelFile.DefaultExt = ".xlsx";
+            //saveExcelFile.Filter = "Книга excel (*.xlsx, *.xls)|*.xlsx;*.xls";
+
+            //ws.Cells[1, 3] = "понедельник";
+            //ws.Cells[1, 4] = "вторник";
+            //ws.Cells[1, 5] = "среда";
+            //ws.Cells[1, 6] = "четверг";
+            //ws.Cells[1, 7] = "пятница";
+            //ws.Cells[1, 8] = "суббота";
+
+            //LessonsSchedule[] rings = context.lessonsSchedule
+            //                            .OrderBy(lesson => lesson.numberLesson)
+            //                            .ToArray();
+            //int column = 2;
+
+            //for (int row = 2; row < (App.days.Length) * rings.Length;)
+            //{
+
+                
+            //    foreach (LessonsSchedule ring in rings)
+            //    {
+            //        ws.Cells[column, 2] = ring.numberLesson + " пара" + "\n" + ring.beginTime + " - " + ring.endTime;
+            //        column++;
+            //    }
+
+            //    excel.get_Range(String.Format("A{0}:A{1}", row, column-1), Type.Missing).Merge(Type.Missing);
+            //    ws.Cells[row, 1] = App.days[(row - 2) / rings.Length];
+
+            //    row += rings.Length;
+            //}
+
+
+            //// Сохранение файла и закрытие excel
+            //if ((bool)saveExcelFile.ShowDialog())
+            //{
+            //    wb.SaveAs(saveExcelFile.FileName);
+            //    wb.Close(true);
+            //}
+
+
+
+
 
             // Список всех преподователей из  таблицы правил
             int[] teachers = context.regulation.Select(id => id.idTeacher).Distinct().ToArray();
@@ -139,7 +194,7 @@ namespace timetable
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
                 System.Diagnostics.Debug.WriteLine("Преподователь:  ID = {0},  Фамилия = {1}", currentTeacher.id, currentTeacher.lastname);
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
-                
+
                 // Рабочий план текущего преподователя
                 WorkPlan[] workPlan = context.workPlan
                                                    .Where(id => id.idTeacher == teacherID)
@@ -182,7 +237,7 @@ namespace timetable
 
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
                         System.Diagnostics.Debug.WriteLine("");
-                        System.Diagnostics.Debug.WriteLine("Правило:  ID = {0},  День недели = {1},  Занятия = {2},  Макс. занятий = {3}", reg.id, reg.day, reg.lessons, reg.maxLesson);
+                        System.Diagnostics.Debug.WriteLine("Правило:  ID = {0},  День недели = {1},  Занятия = {2},  Макс. занятий = {3}", reg.id, App.days[reg.day], reg.lessons, reg.maxLesson);
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
 
                         int[] lessons = reg.lessons.Split(',')
@@ -198,12 +253,12 @@ namespace timetable
                             if (maxLessons == 0)
                             {
                                 break;
-                            }                                                     
+                            }
 
                             // Уменьшаем количество часов на занятия
-                            if (lectures > 0) lectures --;
-                            else if (practices > 0) practices --;
-                            else if (laboratorys > 0) laboratorys --;
+                            if (lectures > 0) lectures--;
+                            else if (practices > 0) practices--;
+                            else if (laboratorys > 0) laboratorys--;
                             else break;
 
                             maxLessons--;
@@ -212,7 +267,7 @@ namespace timetable
                         }
 
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
-                        System.Diagnostics.Debug.WriteLine("Остаток НА НЕДЕЛЮ:  Лекций: = {0},  Практических =  {1},  Лабораторных = {2}", lectures, practices, laboratorys);                        
+                        System.Diagnostics.Debug.WriteLine("Остаток НА НЕДЕЛЮ:  Лекций: = {0},  Практических =  {1},  Лабораторных = {2}", lectures, practices, laboratorys);
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
                         System.Diagnostics.Debug.WriteLine("Расписание: ID предмета = {0},  День недели = {1},  Занятия = {2},  Осталось свободных занятий = {3}",
                                                             plan.idSubject,
@@ -220,11 +275,11 @@ namespace timetable
                                                             String.Join(",", taskLessons
                                                                               .Select(x => x)
                                                                               .OrderBy(x => x)
-                                                                              .ToArray()), 
-                                                            maxLessons);                        
+                                                                              .ToArray()),
+                                                            maxLessons);
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
 
-                        
+
                     }
                 }
             }

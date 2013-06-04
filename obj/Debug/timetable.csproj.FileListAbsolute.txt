@@ -115,3 +115,4 @@ M:\Clouds\Dropbox\timetable\WPFproject\timetable\obj\Debug\src\window\add\NewTea
 M:\Clouds\Dropbox\timetable\WPFproject\timetable\obj\Debug\src\window\add\NewWorkPlanWindow.g.cs
 M:\Clouds\Dropbox\timetable\WPFproject\timetable\bin\Debug\Xceed.Wpf.DataGrid.dll
 M:\Clouds\Dropbox\timetable\WPFproject\timetable\bin\Debug\Xceed.Wpf.Toolkit.dll
+M:\Clouds\Dropbox\timetable\WPFproject\timetable\obj\Debug\timetable.csproj.ResolveComReference.cache
