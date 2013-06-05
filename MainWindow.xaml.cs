@@ -156,6 +156,9 @@ namespace timetable
             int maxLessons;   // Максимальное число пар за день
             int currentTeacherNumber = 2;   // Номер преподователя, нужен для заполнения excel
 
+            List<Regulation> deleteReg = new List<Regulation>();
+            List<int> tempLessons = new List<int>();
+
 
             foreach (int teacherID in teachers)
             {
@@ -173,7 +176,14 @@ namespace timetable
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
                 System.Diagnostics.Debug.WriteLine("Преподователь:  ID = {0},  Фамилия = {1}", currentTeacher.id, currentTeacher.lastname);
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
+
                 ws.Cells[1, currentTeacherNumber] = currentTeacher.lastname;
+
+                // Все правила текущего преподователя, отсортированных по дням недели
+                List<Regulation> teacherFromReg = context.regulation
+                                                            .Where(id => id.idTeacher == teacherID)
+                                                            .OrderBy(d => d.day)
+                                                            .ToList();
 
                 // Рабочий план текущего преподователя
                 WorkPlan[] workPlan = context.workPlan
@@ -201,16 +211,14 @@ namespace timetable
                     System.Diagnostics.Debug.WriteLine("Количество недель в семестре {0}", weeksCount);
                     System.Diagnostics.Debug.WriteLine("Рабочий план НА СЕМЕСТР:  ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}", plan.id, plan.lecturesTime, plan.practiceTime, plan.laboratoryTime);
                     System.Diagnostics.Debug.WriteLine("Рабочий план НА НЕДЕЛЮ:   ID = {0},  Лекций = {1},  Практик = {2},  Лаб = {3}", plan.id, lectures, practices, laboratorys);
-                    ///////////////////\\\\\\\\\\\\\\\\\\\\
+                    ///////////////////\\\\\\\\\\\\\\\\\\\\                    
+
+                    // Удаляем использованные правила
+                    foreach (Regulation del in deleteReg) teacherFromReg.Remove(del);
+                    deleteReg.Clear();
 
 
-                    // Все правила текущего преподователя из рабочего плана, отсортированных по дням недели
-                    Regulation[] teacherFromReg = context.regulation
-                                                                .Where(id => id.idTeacher == teacherID)
-                                                                .OrderBy(d => d.day)
-                                                                .ToArray();
-
-                    foreach (Regulation reg in teacherFromReg)
+                    foreach (Regulation reg in teacherFromReg)                    
                     {
                         maxLessons = reg.maxLesson;
 
@@ -219,18 +227,19 @@ namespace timetable
                         System.Diagnostics.Debug.WriteLine("Правило:  ID = {0},  День недели = {1},  Занятия = {2},  Макс. занятий = {3}", reg.id, App.days[reg.day], reg.lessons, reg.maxLesson);
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
 
-                        int[] lessons = reg.lessons.Split(',')
+                        List<int> lessons = reg.lessons.Split(',')
                                                    .Select(lesson => int.Parse(lesson))
-                                                   .ToArray();
+                                                   .ToList();
+                        tempLessons.Clear();
 
-                        List<int> taskLessons = new List<int>();
-
-                        foreach (int lesson in lessons)
+                        foreach(int lesson in lessons)
                         {
 
                             // Условие выхода из цикла
                             if (maxLessons == 0)
                             {
+                                // Добавляем запись правила в список, для удаления на следующей итерации
+                                deleteReg.Add(reg);
                                 break;
                             }
 
@@ -242,9 +251,8 @@ namespace timetable
 
                             maxLessons--;
 
-                            taskLessons.Add(lesson);
+                            tempLessons.Add(lesson);
 
-                            
                             // Возвращаем название предмета и его id
                             var subject = context.workPlan
                                          .Where(currentPlan => currentPlan.id == plan.id)
@@ -262,16 +270,18 @@ namespace timetable
                                                                                          equals new { K1 = subject.id, K2 = cl.id }
                                                                select cl.className);
 
-                            ws.Cells[reg.day * rings.Length + 2, currentTeacherNumber] = subject.subjectName + "\n" + classes;
+                            ws.Cells[reg.day * rings.Length + 1 + lesson, currentTeacherNumber] = subject.subjectName + "\n" + classes;
+
+                            ////////////////lessons.Remove(lessons[lesson]);
                         }
 
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
                         System.Diagnostics.Debug.WriteLine("Остаток НА НЕДЕЛЮ:  Лекций: = {0},  Практических =  {1},  Лабораторных = {2}", lectures, practices, laboratorys);
                         ///////////////////\\\\\\\\\\\\\\\\\\\\
-                        System.Diagnostics.Debug.WriteLine("Расписание: ID предмета = {0},  День недели = {1},  Занятия = {2},  Осталось свободных занятий = {3}",
-                                                            plan.idSubject,
-                                                            reg.day,
-                                                            String.Join(",", taskLessons
+                        System.Diagnostics.Debug.WriteLine("Расписание: предмет = {0},  День недели = {1},  Занятия = {2},  Осталось свободных занятий = {3}",
+                                                            context.subject.Where(id => id.id == plan.idSubject).Select(n => n.subjectName).Single(),
+                                                            App.days[reg.day],
+                                                            String.Join(",", tempLessons
                                                                               .Select(x => x)
                                                                               .OrderBy(x => x)
                                                                               .ToArray()),
@@ -286,7 +296,7 @@ namespace timetable
             SaveFileDialog saveExcelFile = new SaveFileDialog();
             saveExcelFile.FileName = "Расписание";
             saveExcelFile.DefaultExt = ".xlsx";
-            saveExcelFile.Filter = "Книга excel (*.xlsx, *.xls)|*.xlsx;*.xls";
+            saveExcelFile.Filter = "Книга Excel 2007 (*.xlsx)|*.xlsx|Книга Excel 2003 (*.xls)|*.xls";
 
             // Сохранение файла и закрытие excel
             if ((bool)saveExcelFile.ShowDialog())
