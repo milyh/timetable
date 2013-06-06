@@ -155,6 +155,7 @@ namespace timetable
             int laboratorys;  // КОличествво часов на лабораторные
             int maxLessons;   // Максимальное число пар за день
             int currentTeacherNumber = 2;   // Номер преподователя, нужен для заполнения excel
+            string lessonType; // Тип лекции (л. пр. лаб.)
 
             List<Regulation> deleteReg = new List<Regulation>();
             List<int> tempLessons = new List<int>();
@@ -244,9 +245,9 @@ namespace timetable
                             }
 
                             // Уменьшаем количество часов на занятия
-                            if (lectures > 0) lectures--;
-                            else if (practices > 0) practices--;
-                            else if (laboratorys > 0) laboratorys--;
+                            if (lectures > 0) { lectures--; lessonType = " л."; }
+                            else if (practices > 0) { practices--; lessonType = " пр."; }
+                            else if (laboratorys > 0) { laboratorys--; lessonType = " лаб."; }
                             else break;
 
                             maxLessons--;
@@ -270,7 +271,7 @@ namespace timetable
                                                                                          equals new { K1 = subject.id, K2 = cl.id }
                                                                select cl.className);
 
-                            ws.Cells[reg.day * rings.Length + 1 + lesson, currentTeacherNumber] = subject.subjectName + "\n" + classes;
+                            ws.Cells[reg.day * rings.Length + 1 + lesson, currentTeacherNumber] = subject.subjectName + lessonType + "\n" + classes;
 
                             ////////////////lessons.Remove(lessons[lesson]);
                         }
