@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 
 
 namespace timetable.src.entity.table
@@ -17,28 +13,28 @@ namespace timetable.src.entity.table
     public class Teacher : TableEntity
     {
         [Key]
-        public int id { get; set; }                 // ID преподователя (первичный ключ)
+        public int id { get; set; }                 // ID преподавателя (первичный ключ)
 
-        [Column, Required, DisplayName("Имя")]
-        public string firstname { get; set; }       // Имя преподователя
+        [Column, DisplayName("Фамилия")]
+        public string lastname { get; set; }        // Фамилия преподавателя
 
-        [Column, Required, DisplayName("Фамилия")]
-        public string lastname { get; set; }        // Фамилия преподователя
+        [Column, DisplayName("Имя")]
+        public string firstname { get; set; }       // Имя преподавателя
 
-        [Column, Required, DisplayName("Отчество")]
-        public string middlename { get; set; }      // Отчество преподователя
+        [Column, DisplayName("Отчество")]
+        public string middlename { get; set; }      // Отчество преподавателя
 
-        [Column, Required, DisplayName("Инициалы")]
-        public string initials { get; set; }        // Инициалы преподователя 
+        [Column, DisplayName("Инициалы")]
+        public string initials { get; set; }        // Инициалы преподавателя 
 
-        [Column, Required, DisplayName("Телефон")]
-        public string phone { get; set; }           // Телефон преподователя
+        [Column, DisplayName("Телефон")]
+        public string phone { get; set; }           // Телефон преподавателя
 
         [Column, DisplayName("Адрес")]
-        public string adress { get; set; }          // Адрес преподователя
+        public string address { get; set; }          // Адрес преподавателя
 
         [Column, DisplayName("E-mail")]
-        public string email { get; set; }           // E-mail преподователя
+        public string email { get; set; }           // E-mail преподавателя
 
         [Column, DisplayName("Комментарий")]
         public string description { get; set; }     // Комментарий

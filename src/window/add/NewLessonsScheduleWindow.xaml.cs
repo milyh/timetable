@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using timetable.src.entity;
 using timetable.src.entity.table;
 
@@ -21,12 +13,30 @@ namespace timetable.src.window.add
     public partial class NewLessonsScheduleWindow : Window
     {
         private EntityContext db;
+        private int lessonsCount;
+
+        private readonly int lessonDuration = 95;
+        private readonly int breakDuration = 10;
 
         public NewLessonsScheduleWindow(EntityContext _db)
         {
             InitializeComponent();
 
             db = _db;
+
+            
+            // Последняя пара в таблице
+            lessonsCount = db.lessonsSchedule.Count();                                
+
+            // Создание списка с номером занятия
+            numberLesson.ItemsSource = Enumerable.Range(1, 10);
+            numberLesson.SelectedIndex = lessonsCount;
+
+            // Ставим начальные значения для начала и конца пары относительно номеры пары
+            beginTimePicker.Value = new DateTime(2000, 1, 1, 8, 0, 0)
+                                            .AddMinutes(lessonDuration * lessonsCount + (lessonsCount + 1) * breakDuration);
+            endTimePicker.Value = new DateTime(2000, 1, 1, 9, 35, 0)
+                                            .AddMinutes(lessonDuration * lessonsCount + (lessonsCount + 1) * breakDuration);
         }
 
         // Нажатие кнопки "Добавить"
@@ -37,6 +47,7 @@ namespace timetable.src.window.add
 
             newLessonsSchedule.beginTime = ((DateTime)beginTimePicker.Value).ToString("t"); 
             newLessonsSchedule.endTime = ((DateTime)endTimePicker.Value).ToString("t");
+            newLessonsSchedule.numberLesson = (int)numberLesson.SelectedValue; 
             newLessonsSchedule.description = descriptionTextBox.Text;
 
             // Добавляем созданную аудиторию
@@ -53,6 +64,7 @@ namespace timetable.src.window.add
                 errorTextBox.Text = error.Message;                            // с текстом ошибки
                 errorTextBox.Focus();                                         // устанавливаем фокус на это поле
                 db.lessonsSchedule.Remove(newLessonsSchedule);                // Удаляем созданную аудитории из списка
+                numberLesson.SelectedIndex = lessonsCount;
             }
             finally
             {

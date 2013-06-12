@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using timetable.src.entity;
 using timetable.src.entity.table;
 
@@ -42,7 +34,7 @@ namespace timetable.src.window.add
         // Нажатие кнопки "Добавить"
         private void addNewGroup(object sender, RoutedEventArgs e)
         {
-            // Создаём новую аудиторию
+            // Создаём новую группу
             Group newGroup = new Group();
             newGroup.groupName = groupNameTextBox.Text;
             newGroup.idSpecialty = db.specialty
@@ -51,7 +43,7 @@ namespace timetable.src.window.add
                                             .First();
             newGroup.description = descriptionTextBox.Text;
 
-            // Добавляем созданную аудиторию
+            // Добавляем созданную группу
             db.group.Add(newGroup);
 
             try

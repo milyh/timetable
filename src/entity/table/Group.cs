@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 
 
 namespace timetable.src.entity.table
@@ -19,10 +15,10 @@ namespace timetable.src.entity.table
         [Key]
         public int id { get; set; }                 // ID группы (первичный ключ)
 
-        [Column("group_name"), Required, DisplayName("Название группы")]
+        [Column("group_name"), DisplayName("Название группы")]
         public string groupName { get; set; }       // Название группы
 
-        [Column("id_specialty"), Required, DisplayName("Идентификатор специальности")]
+        [Column("id_specialty"), DisplayName("Идентификатор специальности")]
         public int idSpecialty { get; set; }        // ID специальности / факультета (внешний ключ)
         //[ForeignKey("idSpecialty")]
 
