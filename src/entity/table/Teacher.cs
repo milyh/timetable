@@ -13,28 +13,28 @@ namespace timetable.src.entity.table
     public class Teacher : TableEntity
     {
         [Key]
-        public int id { get; set; }                 // ID преподователя (первичный ключ)
-
-        [Column, DisplayName("Имя")]
-        public string firstname { get; set; }       // Имя преподователя
+        public int id { get; set; }                 // ID преподавателя (первичный ключ)
 
         [Column, DisplayName("Фамилия")]
-        public string lastname { get; set; }        // Фамилия преподователя
+        public string lastname { get; set; }        // Фамилия преподавателя
+
+        [Column, DisplayName("Имя")]
+        public string firstname { get; set; }       // Имя преподавателя
 
         [Column, DisplayName("Отчество")]
-        public string middlename { get; set; }      // Отчество преподователя
+        public string middlename { get; set; }      // Отчество преподавателя
 
         [Column, DisplayName("Инициалы")]
-        public string initials { get; set; }        // Инициалы преподователя 
+        public string initials { get; set; }        // Инициалы преподавателя 
 
         [Column, DisplayName("Телефон")]
-        public string phone { get; set; }           // Телефон преподователя
+        public string phone { get; set; }           // Телефон преподавателя
 
         [Column, DisplayName("Адрес")]
-        public string address { get; set; }          // Адрес преподователя
+        public string address { get; set; }          // Адрес преподавателя
 
         [Column, DisplayName("E-mail")]
-        public string email { get; set; }           // E-mail преподователя
+        public string email { get; set; }           // E-mail преподавателя
 
         [Column, DisplayName("Комментарий")]
         public string description { get; set; }     // Комментарий

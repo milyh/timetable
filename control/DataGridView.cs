@@ -28,25 +28,11 @@ namespace timetable.control
             // Убираем последнюю / нижнюю пустую строку
             this.CanUserAddRows = false;
             // Запрещает редактировать ячейки
-            this.IsReadOnly = true;
+            this.IsReadOnly = true;            
 
             dataTable = new DataTable();
-            
-            // Перед редактированием
-            this.BeginningEdit += (obj, sndr) => 
-                                                {
-                                                    DataRowView current = (DataRowView)this.SelectedItem;
-                                                    System.Diagnostics.Debug.WriteLine(current.Row[0]);
-                                                    System.Diagnostics.Debug.WriteLine(sndr.Column.Header);
-                                                };
-            // После редактирования
-            this.CellEditEnding += (obj, sndr) =>
-                                                    {
-                                                        System.Diagnostics.Debug.WriteLine("после редактированием");
-                                                        this.IsReadOnly = true;     // Запрещает редактировать                                                        
-                                                    };
 
-            // Создаём контекстное меню
+            //// Создаём контекстное меню
             ContextMenu menu = new ContextMenu();
             MenuItem add = new MenuItem { Header = "Добавить" };
             MenuItem edit = new MenuItem { Header = "Редактировать" };
@@ -61,7 +47,7 @@ namespace timetable.control
             menu.Items.Add(edit);
             menu.Items.Add(delete);
 
-            // Устанавливаем контекстное меню для rows таблицы
+            //// Устанавливаем контекстное меню для rows таблицы
             System.Windows.Style rowStyle = new System.Windows.Style { TargetType = typeof(DataGridRow) };
             rowStyle.Setters.Add(new System.Windows.Setter(Control.ContextMenuProperty, menu));
             this.RowStyle = rowStyle;          
@@ -111,6 +97,7 @@ namespace timetable.control
             }            
 
             this.ItemsSource = dataTable.DefaultView;
+
         }
     }
 }

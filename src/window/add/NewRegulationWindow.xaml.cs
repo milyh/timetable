@@ -150,8 +150,9 @@ namespace timetable.src.window.add
                 dayOfWeekComboBox.Items.RemoveAt(i);
             }
 
-            if (dayOfWeekComboBox.Items.Count == 0) this.IsEnabled = false;
-            else dayOfWeekComboBox.SelectedIndex = 0;
+            //if (dayOfWeekComboBox.Items.Count == 0) this.IsEnabled = false;
+            //else 
+                dayOfWeekComboBox.SelectedIndex = 0;
         }
     }
 }

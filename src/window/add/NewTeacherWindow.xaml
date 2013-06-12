@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         KeyDown="enterKeyDown"
-        Title="Новый преподователь" ResizeMode="NoResize" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=firstnameTextBox}" WindowStartupLocation="CenterOwner" >
+        Title="Новый преподаватель" ResizeMode="NoResize" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=lastnameTextBox}" WindowStartupLocation="CenterOwner" >
 
     <Grid Margin="10" >
         <Grid.RowDefinitions>
@@ -21,11 +21,13 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="Имя" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
-        <TextBox Name="firstnameTextBox" Grid.Column="1" Grid.Row="0" Width="150" VerticalAlignment="Center" FontSize="14" />
+        <Label Grid.Column="0" Grid.Row="0" Content="Фамилия" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
+        <TextBox Name="lastnameTextBox" Grid.Column="1" Grid.Row="0" Width="150" VerticalAlignment="Center" FontSize="14" />
 
-        <Label Grid.Column="0" Grid.Row="1" Content="Фамилия" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
-        <TextBox Name="lastnameTextBox" Grid.Column="1" Grid.Row="1" Width="150" VerticalAlignment="Center" FontSize="14" />
+        <Label Grid.Column="0" Grid.Row="1" Content="Имя" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
+        <TextBox Name="firstnameTextBox" Grid.Column="1" Grid.Row="1" Width="150" VerticalAlignment="Center" FontSize="14" />
+
+        
 
         <Label Grid.Column="0" Grid.Row="2" Content="Отчество" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"  />
         <TextBox Name="middlenameTextBox" Grid.Column="1" Grid.Row="2" Width="150" VerticalAlignment="Center" FontSize="14" />

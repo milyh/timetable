@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.Win32;
+using System.Windows.Input;
+using System.Diagnostics;
 
 namespace timetable
 {
@@ -107,10 +109,37 @@ namespace timetable
             //System.Reflection.MethodInfo genericChange = change.MakeGenericMethod(context.regulation.FirstOrDefault().GetType());
             //genericChange.Invoke(grid, new object[] { context.regulation });
 
+        }
 
+        // Навигационное меню
+        private void menuButtonClick(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
 
+            string type = (sender as Button).Name.Replace("Button", string.Empty);
 
+            switch (type)
+            {
+                case "Teacher":
+                    grid.Change<Teacher>(context.teacher);
+                    break;
+                case "Classroom":
+                    grid.Change<Classroom>(context.classroom);
+                    break;
+                case "Subject":
+                    grid.Change<Subject>(context.subject);
+                    break;
+                case "Specialty":
+                    grid.Change<Specialty>(context.specialty);
+                    break;
+            }
+        }
 
+        // Клик по кнопке составить расписание 
+        private void createSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+            this.Cursor = Cursors.Wait;            
 
             Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
             if (excel == null)
@@ -121,7 +150,7 @@ namespace timetable
             //excel.Visible = true;
             Excel.Workbook wb = excel.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
             Excel.Worksheet ws = (Excel.Worksheet)wb.Worksheets[1];
-            ws.Name = "Расписание";            
+            ws.Name = "Расписание";
 
             LessonsSchedule[] rings = context.lessonsSchedule
                                         .OrderBy(lesson => lesson.numberLesson)
@@ -143,9 +172,19 @@ namespace timetable
             }
 
 
-            
-            // Список всех преподователей из  таблицы правил
-            int[] teachers = context.regulation.Select(id => id.idTeacher).Distinct().ToArray();
+
+            // Список всех преподователей из таблицы правил
+            int[] teachers = context.regulation
+                                          .Join(
+                                            context.teacher,
+                                            reg => reg.idTeacher,
+                                            teach => teach.id,
+                                            (reg, teach) => new { reg.idTeacher, teach.lastname }
+                                          )
+                                          .Distinct()
+                                          .OrderBy(x => x.lastname)                                                                                    
+                                          .Select(x => x.idTeacher)
+                                          .ToArray();
 
             //Количество недель в семестре
             int weeksCount;
@@ -171,7 +210,7 @@ namespace timetable
 
                 // Текущий преподователь
                 Teacher currentTeacher = context.teacher
-                                                   .Where(id => id.id == teacherID)
+                                                   .Where(id => id.id == teacherID)                                                   
                                                    .Single();
 
                 ///////////////////\\\\\\\\\\\\\\\\\\\\
@@ -219,7 +258,7 @@ namespace timetable
                     deleteReg.Clear();
 
 
-                    foreach (Regulation reg in teacherFromReg)                    
+                    foreach (Regulation reg in teacherFromReg)
                     {
                         maxLessons = reg.maxLesson;
 
@@ -233,7 +272,7 @@ namespace timetable
                                                    .ToList();
                         tempLessons.Clear();
 
-                        foreach(int lesson in lessons)
+                        foreach (int lesson in lessons)
                         {
 
                             // Условие выхода из цикла
@@ -266,12 +305,16 @@ namespace timetable
                                          .Single();
 
                             // По id предмета возвращаем все аудитории, в которых он преподаётся
-                            string classes = String.Join(", ", from sc in context.subjectClasses
-                                                               join cl in context.classroom on new { K1 = sc.idSubject, K2 = sc.idClassroom }
-                                                                                         equals new { K1 = subject.id, K2 = cl.id }
-                                                               select cl.className);
-
-                            ws.Cells[reg.day * rings.Length + 1 + lesson, currentTeacherNumber] = subject.subjectName + lessonType + "\n" + classes;
+                            string[] classes = context.subjectClasses
+                                                                .Join(
+                                                                    context.classroom,
+                                                                    sc => new { k1 = sc.idSubject, k2 = sc.idClassroom },
+                                                                    cl => new { k1 = subject.id, k2 = cl.id },
+                                                                    (sc, cl) => cl.className
+                                                                )
+                                                                .ToArray();
+                                                
+                            ws.Cells[reg.day * rings.Length + 1 + lesson, currentTeacherNumber] = subject.subjectName + lessonType + "\n" + classes[new Random().Next(classes.Length)];
 
                             ////////////////lessons.Remove(lessons[lesson]);
                         }
@@ -292,8 +335,46 @@ namespace timetable
                     }
                 }
             }
-        /// ------- Цикл по составлению рассписания кончился ------------
+            /// ------- Цикл по составлению рассписания кончился ------------
+
+
+            /// Стили для excel
             
+            // Преподаватели 
+            var teachersRange = ws.Range["C1", String.Format("{0}1", Convert.ToChar(67 + teachers.Length))];  // где 67 - код из ASCII буквы C 
+            teachersRange.Orientation = 90;
+            teachersRange.WrapText = false;
+            teachersRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            teachersRange.VerticalAlignment = Excel.XlVAlign.xlVAlignBottom;
+            teachersRange.Font.Size = 16;
+            teachersRange.Font.Name = "Arial";
+
+            // Дни недели
+            var daysRange = ws.Range["A2", String.Format("A{0}", rings.Length * App.days.Length)];
+            daysRange.Orientation = 90;
+            daysRange.WrapText = false;
+            daysRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            daysRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            daysRange.Font.Size = 16;
+            daysRange.Font.Name = "Arial";
+
+            // Номера занятий
+            var lessonRange = ws.Range["B2", String.Format("B{0}", rings.Length * App.days.Length + 1)];
+            lessonRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            lessonRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            lessonRange.Font.Size = 12;
+            lessonRange.ColumnWidth = 15;
+
+            // Расписание
+            var scheduleRange = ws.Range["C2", String.Format("{0}{1}", Convert.ToChar(67 + teachers.Length), rings.Length * App.days.Length + 1)];
+            scheduleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            scheduleRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            scheduleRange.Font.Size = 12;
+            scheduleRange.WrapText = true;
+            scheduleRange.Rows.AutoFit();
+            scheduleRange.ColumnWidth = 25;
+
+
             SaveFileDialog saveExcelFile = new SaveFileDialog();
             saveExcelFile.FileName = "Расписание";
             saveExcelFile.DefaultExt = ".xlsx";
@@ -303,34 +384,18 @@ namespace timetable
             if ((bool)saveExcelFile.ShowDialog())
             {
                 wb.SaveAs(saveExcelFile.FileName);
+
                 wb.Close(true);
+                excel.Quit();
+                excel.DisplayAlerts = false;
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(excel);                
+
+                Process.Start(saveExcelFile.FileName);                
             }
 
+            this.IsEnabled = true;
+            this.Cursor = null;            
 
-        }
-
-
-        private void menuButtonClick(object sender, RoutedEventArgs e)
-        {
-            e.Handled = true;
-
-            string type = (sender as Button).Name.Replace("Button", string.Empty);
-
-            switch (type)
-            {
-                case "Teacher":
-                    grid.Change<Teacher>(context.teacher);
-                    break;
-                case "Classroom":
-                    grid.Change<Classroom>(context.classroom);
-                    break;
-                case "Subject":
-                    grid.Change<Subject>(context.subject);
-                    break;
-                case "Specialty":
-                    grid.Change<Specialty>(context.specialty);
-                    break;
-            }
         }
 
     }
